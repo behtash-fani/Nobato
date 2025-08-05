@@ -1,0 +1,34 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Nobato{% endblock %}</title>
+
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+    {% block extra_css %}
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+
+
+<div class="container">
+    {% include 'inc/navbar.html' %}
+    {% block content %}{% endblock %}
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+      <h2 class="mb-4 text-center">ویرایش پروفایل استایلیست</h2>
+
+      <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+        {% csrf_token %}
+
+        {% if user.stylistprofile.profile_image %}
+          <div class="text-center mb-3">
+            <img src="{{ user.stylistprofile.profile_image.url }}" alt="پروفایل" width="120" height="120" class="rounded-circle shadow-sm" style="object-fit: cover;">
+          </div>
+        {% endif %}
+
+        <div class="mb-3">
+          <label for="id_profile_image" class="form-label">تغییر عکس پروفایل</label>
+          <input type="file" name="profile_image" class="form-control" id="id_profile_image">
+          {% for error in form.profile_image.errors %}
+            <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          {{ form.salon_name.label_tag }}
+          {{ form.salon_name }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.experience_years.label_tag }}
+          {{ form.experience_years }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.specialty_description.label_tag }}
+          {{ form.specialty_description }}
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">ذخیره و تغییرات ثبت</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

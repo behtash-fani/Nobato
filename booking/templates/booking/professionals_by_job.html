@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mb-4 text-center">متخصصین حوزه: {{ job.title }}</h3>
+    <div class="row">
+        {% for stylist in professionals %}
+            <div class="col-md-4 mb-4">
+                <div class="card text-center shadow-sm">
+                    {% if stylist.profile_image %}
+                        <img src="{{ stylist.profile_image.url }}" class="card-img-top rounded-circle mx-auto mt-3" style="width:100px;height:100px;object-fit:cover;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/100" class="card-img-top rounded-circle mx-auto mt-3">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stylist.user.username }}</h5>
+                        <p class="card-text">{{ stylist.salon_name }}</p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">درخواست نوبت</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>متخصصی در این حوزه هنوز ثبت نشده.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

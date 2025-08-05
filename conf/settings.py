@@ -1,0 +1,123 @@
+from pathlib import Path
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = 'django-insecure-v1kow4=d0mgn9r9wh&l%odf^p#gxmn9#eq(8lnh5u*%j45hqq('
+DEBUG = True
+ALLOWED_HOSTS = ['*']  # برای هاست اشتراکی یا تست
+
+# ---------------------------
+# Installed Apps
+# ---------------------------
+INSTALLED_APPS = [
+    # Django core
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    # Local apps
+    'accounts',
+    'professionals',
+    'appointments',
+    'payments',
+    'booking',
+    'common',
+]
+
+# ---------------------------
+# Middleware
+# ---------------------------
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'conf.urls'
+
+# ---------------------------
+# Templates
+# ---------------------------
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'conf.wsgi.application'
+
+# ---------------------------
+# Database
+# ---------------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # در آینده میشه MySQL یا PostgreSQL
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# ---------------------------
+# Password Validators
+# ---------------------------
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 6}
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# ---------------------------
+# Internationalization
+# ---------------------------
+LANGUAGE_CODE = 'fa-ir'  # چون مخاطب ایرانی‌ست
+TIME_ZONE = 'Asia/Tehran'
+USE_I18N = True
+USE_TZ = True
+
+# ---------------------------
+# Static & Media
+# ---------------------------
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # برای collectstatic
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ---------------------------
+# Default Primary Key
+# ---------------------------
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ---------------------------
+# Custom User Model
+# ---------------------------
+AUTH_USER_MODEL = 'accounts.CustomUser'

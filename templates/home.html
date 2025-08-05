@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mb-4 text-center">دسته‌بندی مشاغل</h3>
+    <div class="row">
+        {% for job in jobs %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <a href="{% url 'booking:list_professionals_by_job' job.code %}" class="btn btn-outline-primary btn-sm">
+                            مشاهده متخصصین
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

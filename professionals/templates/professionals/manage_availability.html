@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mb-4">مدیریت زمان‌های آزاد</h3>
+
+    <form method="post" class="mb-4 border rounded p-3 shadow-sm bg-light">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">افزودن زمان</button>
+    </form>
+
+    <hr>
+    <h5 class="mt-4 mb-3">🕒 زمان‌های ثبت‌شده:</h5>
+    <ul class="list-group">
+        {% for slot in time_slots %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    {{ slot.get_weekday_display }} - {{ slot.start_time }} تا {{ slot.end_time }}
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'appointments:edit_availability' slot.id %}" class="btn btn-sm btn-outline-secondary">✏️ ویرایش</a>
+                    <a href="{% url 'appointments:delete_availability' slot.pk %}" class="btn btn-sm btn-outline-danger">❌ حذف</a>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">هیچ زمانی ثبت نشده.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
