@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-v1kow4=d0mgn9r9wh&l%odf^p#gxmn9#eq(8lnh5u*%j45hqq('
 DEBUG = True
-ALLOWED_HOSTS = ['*']  # برای هاست اشتراکی یا تست
+ALLOWED_HOSTS = ['*']
 
 # ---------------------------
 # Installed Apps
@@ -19,13 +19,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Local apps
-    'accounts',
-    'professionals',
-    'appointments',
-    'payments',
-    'booking',
-    'common',
+    # اپ‌های پروژه
+    'accounts',         # مدل کاربر سفارشی
+    'professionals',    # برای حرفه‌ای‌ها / ارائه‌دهندگان خدمات
+    'appointments',     # زمان‌بندی قرارها
 ]
 
 # ---------------------------

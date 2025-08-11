@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from accounts.models import CustomUser
 from professionals.models import StylistProfile
 
@@ -25,3 +27,20 @@ class Availability(models.Model):
 
     def __str__(self):
         return f"{self.stylist.user.username} - {self.get_weekday_display()} {self.start_time}-{self.end_time}"
+
+
+class Appointment(models.Model):
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    professional_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    professional_object_id = models.PositiveIntegerField()
+    professional = GenericForeignKey('professional_content_type', 'professional_object_id')
+    date = models.DateField(db_index=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['professional_content_type', 'professional_object_id', 'date']),
+            models.Index(fields=['customer', 'date']),
+        ]
+

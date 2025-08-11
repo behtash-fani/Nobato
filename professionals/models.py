@@ -4,6 +4,7 @@ from django.conf import settings
 import os
 from django.utils.translation import gettext_lazy as _
 
+
 ALLOWED_JOB_CODES = [
     'stylist',         # آرایشگر
     'doctor',         # پزشک
@@ -36,21 +37,20 @@ class Job(models.Model):
             raise ValidationError(f"کد '{self.code}' مجاز نیست. از لیست معتبر استفاده کنید.")
 
 
-def stylist_image_path(instance, filename):
-    return f'{instance.user.job.code}/{instance.user.id}/profile.jpg'
-
-class StylistProfile(models.Model):
+class BaseProfile(models.Model):
     user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE)
-    profile_image = models.ImageField(
-        upload_to=stylist_image_path,
-        blank=True,
-        null=True,
-        verbose_name="عکس پروفایل"
-    )
-    salon_name = models.CharField(max_length=100, blank=True, verbose_name="نام سالن")
+    profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
     experience_years = models.PositiveIntegerField(verbose_name="سال سابقه")
-    specialty_description = models.TextField(blank=True, verbose_name="توضیحات تخصص")
+    bio = models.TextField(blank=True, verbose_name="بیوگرافی عمومی")
 
-    def __str__(self):
-        return f"استایلیست: {self.user.username}"
+    class Meta:
+        abstract = True
+
+class StylistProfile(BaseProfile):
+    salon_name = models.CharField(max_length=100, blank=True)
+    specialty_description = models.TextField(blank=True)
+
+class DoctorProfile(BaseProfile):
+    clinic_name = models.CharField(max_length=100, blank=True)
+    specialization = models.CharField(max_length=100)
 

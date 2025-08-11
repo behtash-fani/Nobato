@@ -7,7 +7,17 @@ from django.shortcuts import render
 from .models import StylistProfile, Job
 from appointments.models import Availability
 from appointments.forms import AvailabilityForm
+from .models import StylistProfile, DoctorProfile
 
+
+def profile_view(request, profile_type, profile_id):
+    profiles = {
+        'stylist': StylistProfile,
+        'doctor': DoctorProfile,
+    }
+    profile_model = profiles.get(profile_type)
+    profile = get_object_or_404(profile_model, id=profile_id)
+    return render(request, f'professionals/{profile_type}_profile.html', {'profile': profile})
 
 
 def job_list(request):
@@ -16,40 +26,22 @@ def job_list(request):
 
 
 def professionals_by_job(request, job_code):
-    print(job_code)
     job = Job.objects.get(code=job_code)
     if job.code == 'stylist':
         professionals = StylistProfile.objects.filter(user__job=job)
+    elif job.code == 'doctor':
+        professionals = DoctorProfile.objects.filter(user__job=job)
+    elif job.code == 'coach':
+        professionals = DoctorProfile.objects.filter(user__job=job)
+    elif job.code == 'electrician':
+        professionals = DoctorProfile.objects.filter(user__job=job)
     if request.user.is_authenticated:
         professionals = professionals.exclude(user=request.user)
 
-    return render(request, 'booking/professionals_by_job.html', {
+    return render(request, 'professionals/professionals_by_job.html', {
         'job': job,
         'professionals': professionals
     })
-
-
-@login_required
-def edit_stylist_profile(request):
-    user = request.user
-
-    if user.role != 'professional' or user.job.code != 'stylist':
-        return redirect('accounts:dashboard')
-
-    try:
-        profile = user.stylistprofile
-    except StylistProfile.DoesNotExist:
-        return redirect('professionals:edit_stylist_profile')
-
-    if request.method == 'POST':
-        form = StylistProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:dashboard')
-    else:
-        form = StylistProfileForm(instance=profile)
-
-    return render(request, 'professionals/edit_profile.html', {'form': form})
 
 @login_required
 def manage_availability(request):
