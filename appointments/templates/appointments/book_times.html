@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-1">
+        انتخاب زمان — {{ profile.user.get_full_name|default:profile.user.username }}
+    </h3>
+    <div class="text-muted mb-3">تاریخ: {{ day|date:"Y-m-d" }}</div>
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mb-2">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if free_slots %}
+    <div class="row g-3">
+        {% for s,e in free_slots %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <form method="post" class="d-grid">
+                {% csrf_token %}
+                <input type="hidden" name="start" value="{{ s|time:'H:i' }}">
+                <input type="hidden" name="end" value="{{ e|time:'H:i' }}">
+                <button class="btn btn-primary">
+                    {{ s|time:"H:i" }} — {{ e|time:"H:i" }}
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        برای این تاریخ، زمان آزادی در دسترس نیست.
+    </div>
+    {% endif %}
+
+    <div class="mt-4 d-flex gap-2">
+        <a class="btn btn-light" href="{% url 'appointments:book_start' profile_type profile.id %}">
+            انتخاب تاریخ دیگر
+        </a>
+        <a class="btn btn-outline-secondary"
+            href="{% url 'professionals:professionals_by_job' profile.user.job.code %}">
+            بازگشت به لیست متخصصین
+        </a>
+    </div>
+</div>
+{% endblock %}

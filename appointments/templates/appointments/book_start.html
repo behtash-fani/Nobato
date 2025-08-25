@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-3">رزرو نوبت برای {{ profile.user.get_full_name|default:profile.user.username }}</h3>
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mb-2">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if dates_with_free %}
+    <p class="text-muted">یک تاریخ را انتخاب کنید:</p>
+    <div class="row g-3">
+        {% for d in dates_with_free %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a class="btn btn-outline-primary w-100"
+                href="{% url 'appointments:book_times' profile_type profile.id d|date:'Y-m-d' %}">
+                {{ d|date:"Y-m-d" }}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        در ۱۴ روز آینده، زمان آزادی برای رزرو وجود ندارد.
+    </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a class="btn btn-light" href="{% url 'professionals:professionals_by_job' profile.user.job.code %}">
+            بازگشت به لیست متخصصین
+        </a>
+    </div>
+</div>
+{% endblock %}

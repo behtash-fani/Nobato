@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block content %}
@@ -41,3 +42,48 @@
     </div>
 </div>
 {% endblock %}
+=======
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow rounded border-0">
+                <div class="card-body text-center">
+
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" class="rounded-circle shadow-sm mb-3" width="130" height="130" style="object-fit: cover;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/130x130?text=No+Image" class="rounded-circle mb-3">
+                    {% endif %}
+
+                    <h4 class="fw-bold">{{ user.username }}</h4>
+
+                    {% if profile.salon_name %}
+                        <p class="text-muted mb-1">🏢 <strong>{{ profile.salon_name }}</strong></p>
+                    {% endif %}
+
+                    <p class="mb-1">🕒 <strong>{{ profile.experience_years }}</strong> سال سابقه</p>
+                    <p class="text-muted">📋 {{ profile.specialty_description|linebreaksbr }}</p>
+
+                    <hr>
+
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'professionals:edit_stylist_profile' %}" class="btn btn-outline-primary">
+                            ✏️ ویرایش پروفایل
+                        </a>
+                        <a href="{% url 'professionals:manage_availability' %}" class="btn btn-outline-success">
+                            🗓 مدیریت زمان‌های آزاد
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+>>>>>>> 100bba5 (Inititial commit)

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -75,3 +76,82 @@ dmypy.json
 *.bak
 *.swp
 *.swo
+=======
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.p~
+
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Django
+*.log
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+static_root/
+
+# Migrations
+**/migrations/
+!*/migrations/__init__.py
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Env Files
+.env
+*.env
+
+# Compiled JS/CSS (if any)
+*.map
+
+# Mac
+.DS_Store
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Test output
+*.cover
+*.py,cover
+.tox/
+.nox/
+.cache/
+nosetests.xml
+coverage.xml
+*.log
+
+# Pipenv
+Pipfile.lock
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pytest
+.pytest_cache/
+
+# Backup files
+*.bak
+*.swp
+*.swo
+>>>>>>> 100bba5 (Inititial commit)

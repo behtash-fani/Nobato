@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- templates/appointments/book_appointment.html -->
 
 {% extends "base.html" %}
@@ -12,3 +13,19 @@
     </form>
 </div>
 {% endblock %}
+=======
+<!-- templates/appointments/book_appointment.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>رزرو نوبت</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ثبت نوبت</button>
+    </form>
+</div>
+{% endblock %}
+>>>>>>> 100bba5 (Inititial commit)

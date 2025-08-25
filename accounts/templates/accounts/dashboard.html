@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">داشبورد کاربر</h2>
+    <div class="text-muted small">
+      {{ user.get_full_name|default:user.username }}
+    </div>
+  </div>
+
+  {# پیام‌ها #}
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mb-2">{{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% with at=active_tab|default:'overview' %}
+
+  {# Tabs #}
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link {% if at == 'overview' %}active{% endif %}" data-bs-toggle="tab"
+        data-bs-target="#tab-overview" type="button" role="tab">
+        مرور کلی
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link {% if not profile_form %}disabled{% elif at == 'profile' %}active{% endif %}"
+        data-bs-toggle="tab" data-bs-target="#tab-profile" type="button" role="tab">
+        پروفایل تخصصی
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link {% if not availability_form %}disabled{% elif at == 'availability' %}active{% endif %}"
+        data-bs-toggle="tab" data-bs-target="#tab-availability" type="button" role="tab">
+        زمان‌های دسترسی
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content pt-3">
+
+    {# --- Tab 1: مرور کلی --- #}
+    <div class="tab-pane fade {% if at == 'overview' %}show active{% endif %}" id="tab-overview" role="tabpanel">
+      <div class="row g-4">
+
+        <!-- کارت انتخاب شغل -->
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-header">انتخاب شغل</div>
+            <div class="card-body">
+              <form method="post" class="vstack gap-3">
+                {% csrf_token %}
+                <input type="hidden" name="form_name" value="job">
+                <div>
+                  <label class="form-label">{{ job_form.job.label }}</label>
+                  {{ job_form.job }}
+                </div>
+                <button class="btn btn-primary w-100" type="submit">ذخیره شغل</button>
+                <div class="form-text">با انتخاب شغل، تب‌های «پروفایل تخصصی» و «زمان‌های دسترسی» فعال می‌شوند.</div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- کارت خلاصه پروفایل -->
+        <div class="col-lg-8">
+          <div class="card h-100">
+            <div class="card-header">خلاصه</div>
+            <div class="card-body">
+              {% if profile_form %}
+              <div class="row g-3 align-items-center">
+                <div class="col-sm-3">
+                  {% if profile_form.instance.profile_image %}
+                  <img src="{{ profile_form.instance.profile_image.url }}" class="img-fluid rounded"
+                    alt="profile image">
+                  {% else %}
+                  <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                    style="height:120px;">
+                    <span class="text-muted">بدون تصویر</span>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-sm-9">
+                  <div class="row">
+                    <div class="col-md-6 mb-2">
+                      <div class="text-muted small">شغل</div>
+                      <div class="fw-semibold">{{ profile_model_name }}</div>
+                    </div>
+                    {% if profile_form.instance.salon_name %}
+                    <div class="col-md-6 mb-2">
+                      <div class="text-muted small">نام سالن/محل</div>
+                      <div class="fw-semibold">{{ profile_form.instance.salon_name }}</div>
+                    </div>
+                    {% endif %}
+                    {% if profile_form.instance.experience_years %}
+                    <div class="col-md-6 mb-2">
+                      <div class="text-muted small">سابقه</div>
+                      <div class="fw-semibold">{{ profile_form.instance.experience_years }} سال</div>
+                    </div>
+                    {% endif %}
+                    {% if profile_form.instance.specialization or profile_form.instance.specialty_description %}
+                    <div class="col-12 mt-2">
+                      <div class="text-muted small">تخصص</div>
+                      <div class="fw-normal">
+                        {{
+                        profile_form.instance.specialization|default:profile_form.instance.specialty_description|default:"—"
+                        }}
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary" data-bs-toggle="tab" data-bs-target="#tab-profile" role="tab">ویرایش
+                  پروفایل</a>
+                <a class="btn btn-outline-secondary" data-bs-toggle="tab" data-bs-target="#tab-availability"
+                  role="tab">مدیریت دسترسی</a>
+              </div>
+              {% else %}
+              <p class="text-muted mb-0">برای شروع، ابتدا شغل را از کارت سمت راست انتخاب کنید.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {# --- Tab 2: پروفایل تخصصی --- #}
+    <div class="tab-pane fade {% if at == 'profile' %}show active{% endif %}" id="tab-profile" role="tabpanel">
+      <div class="card">
+        <div class="card-header">
+          {% if profile_model_name %}
+          پروفایل تخصصی ({{ profile_model_name }})
+          {% else %}
+          ابتدا شغل را انتخاب کنید
+          {% endif %}
+        </div>
+        <div class="card-body">
+          {% if profile_form %}
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_name" value="profile">
+
+            <div class="row g-3">
+              {% for field in profile_form.visible_fields %}
+              <div class="col-md-6">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                {% for err in field.errors %}<div class="text-danger small">{{ err }}</div>{% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="mt-3">
+              <button class="btn btn-success" type="submit">ذخیره پروفایل</button>
+              <a class="btn btn-light" data-bs-toggle="tab" data-bs-target="#tab-overview" role="tab">بازگشت</a>
+            </div>
+          </form>
+          {% else %}
+          <p class="text-muted mb-0">برای نمایش فرم پروفایل، ابتدا شغل را انتخاب کنید.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {# --- Tab 3: زمان‌های دسترسی --- #}
+    <div class="tab-pane fade {% if at == 'availability' %}show active{% endif %}" id="tab-availability"
+      role="tabpanel">
+      <div class="row g-4">
+
+        <!-- افزودن بازه جدید -->
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-header">افزودن بازه دسترسی</div>
+            <div class="card-body">
+              {% if availability_form %}
+              <form method="post" class="row g-3">
+                {% csrf_token %}
+                <input type="hidden" name="form_name" value="availability_add">
+
+                <div class="col-12">
+                  <label class="form-label">{{ availability_form.specific_date.label }}</label>
+                  {{ availability_form.specific_date }}
+                  <div class="form-text">اگر تاریخ مشخص را پر کنید، «روز هفته» را خالی بگذارید.</div>
+                  {% for e in availability_form.specific_date.errors %}
+                  <div class="text-danger small">{{ e }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label">{{ availability_form.weekday.label }}</label>
+                  {{ availability_form.weekday }}
+                  <div class="form-text">اگر روز هفته را انتخاب کنید، «تاریخ مشخص» را خالی بگذارید.</div>
+                  {% for e in availability_form.weekday.errors %}
+                  <div class="text-danger small">{{ e }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">{{ availability_form.start_time.label }}</label>
+                  {{ availability_form.start_time }}
+                  {% for e in availability_form.start_time.errors %}
+                  <div class="text-danger small">{{ e }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">{{ availability_form.end_time.label }}</label>
+                  {{ availability_form.end_time }}
+                  {% for e in availability_form.end_time.errors %}
+                  <div class="text-danger small">{{ e }}</div>
+                  {% endfor %}
+                </div>
+
+                {% if availability_form.non_field_errors %}
+                <div class="col-12">
+                  <div class="alert alert-danger py-2 mb-0">
+                    {{ availability_form.non_field_errors }}
+                  </div>
+                </div>
+                {% endif %}
+
+                <div class="col-12">
+                  <button class="btn btn-primary w-100" type="submit">افزودن</button>
+                </div>
+              </form>
+              {% else %}
+              <p class="text-muted mb-0">ابتدا شغل را انتخاب و پروفایل را ایجاد کنید.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- لیست بازه‌ها -->
+        <div class="col-lg-8">
+          <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <span>لیست زمان‌های دسترسی</span>
+              <small class="text-muted">برای حذف، روی دکمه «حذف» بزنید</small>
+            </div>
+            <div class="card-body">
+              {% if availability_list %}
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>تاریخ/روز</th>
+                      <th>شروع</th>
+                      <th>پایان</th>
+                      <th class="text-end">عملیات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for av in availability_list %}
+                    <tr>
+                      <td>
+                        {% if av.specific_date %}
+                        {{ av.specific_date }}
+                        {% else %}
+                        {{ av.get_weekday_display }}
+                        {% endif %}
+                      </td>
+                      <td>{{ av.start_time }}</td>
+                      <td>{{ av.end_time }}</td>
+                      <td class="text-end">
+                        <form method="post" class="d-inline" onsubmit="return confirm('حذف این بازه؟');">
+                          {% csrf_token %}
+                          <input type="hidden" name="form_name" value="availability_delete">
+                          <input type="hidden" name="availability_id" value="{{ av.id }}">
+                          <button class="btn btn-outline-danger btn-sm">حذف</button>
+                        </form>
+                      </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="4" class="text-muted">هنوز بازه‌ای ثبت نشده است.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <p class="text-muted mb-0">هیچ بازه‌ای ثبت نشده است.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="mt-3">
+        <a class="btn btn-light" data-bs-toggle="tab" data-bs-target="#tab-overview" role="tab">بازگشت</a>
+      </div>
+    </div>
+  </div>
+  {% endwith %}
+
+</div>
+{% endblock %}

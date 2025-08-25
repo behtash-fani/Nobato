@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block content %}
@@ -29,3 +30,99 @@
     </ul>
 </div>
 {% endblock %}
+=======
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-4">مدیریت زمان‌های آزاد</h3>
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mb-2">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header">افزودن بازه</div>
+        <div class="card-body">
+            <form method="post" class="row g-3">
+                {% csrf_token %}
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.specific_date.label }}</label>
+                    {{ form.specific_date }}
+                    <div class="form-text">در صورت پر کردن تاریخ مشخص، لازم نیست روز هفته را پر کنید.</div>
+                    {% for e in form.specific_date.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ form.weekday.label }}</label>
+                    {{ form.weekday }}
+                    <div class="form-text">در صورت انتخاب روز هفته، تاریخ را خالی بگذارید.</div>
+                    {% for e in form.weekday.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">{{ form.start_time.label }}</label>
+                    {{ form.start_time }}
+                    {% for e in form.start_time.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">{{ form.end_time.label }}</label>
+                    {{ form.end_time }}
+                    {% for e in form.end_time.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="col-12">
+                    <div class="alert alert-danger py-2 mb-0">{{ form.non_field_errors }}</div>
+                </div>
+                {% endif %}
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">افزودن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">لیست زمان‌ها</div>
+        <div class="card-body">
+            {% if time_slots %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>تاریخ/روز</th>
+                            <th>شروع</th>
+                            <th>پایان</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in time_slots %}
+                        <tr>
+                            <td>
+                                {% if slot.specific_date %}
+                                {{ slot.specific_date }}
+                                {% else %}
+                                {{ slot.get_weekday_display }}
+                                {% endif %}
+                            </td>
+                            <td>{{ slot.start_time }}</td>
+                            <td>{{ slot.end_time }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">هنوز زمانی ثبت نشده است.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+>>>>>>> 100bba5 (Inititial commit)

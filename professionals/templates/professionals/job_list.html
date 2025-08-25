@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- templates/professionals/job_list.html -->
 {% extends "base.html" %}
 {% block content %}
@@ -14,3 +15,21 @@
     </div>
 </div>
 {% endblock %}
+=======
+<!-- templates/professionals/job_list.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h4 class="mb-4">انتخاب شغل موردنظر</h4>
+    <div class="row">
+        {% for job in jobs %}
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <a href="{% url 'professionals:professionals_by_job' job.code %}" class="btn btn-outline-primary w-100">
+                    {{ job.title }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+>>>>>>> 100bba5 (Inititial commit)
